@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Signup from '@/components/auth/Signup'
 import Login from '@/components/auth/Login'
 import Home from '@/components/home/Home'
+import NewNote from '@/components/NewNote'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -24,6 +25,15 @@ const router = new Router({
       path: '/home',
       name: 'Home',
       component: Home,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/newNote',
+      name: 'NewNote',
+      component: NewNote,
       props: true,
       meta: {
         requiresAuth: true
