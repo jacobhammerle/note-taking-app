@@ -1,7 +1,7 @@
 <template>
     <div class="absolute inset-x-0 mx-auto flex p-5">
         <div class="flex-1">
-            Notes Logo
+            Logo
         </div>
         <div class="flex-wrap">
             <div @click="clickProfile" class="block cursor-pointer float-right bg-teal-600 rounded-full shadow-lg h-12 w-12">

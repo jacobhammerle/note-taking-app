@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="bg-gray-100 h-screen">
     <Navbar />
-    <div class="max-w-3xl mx-auto pt-20">
+    <div class="max-w-4xl mx-auto pt-20">
       <router-view />
     </div>
   </div>
