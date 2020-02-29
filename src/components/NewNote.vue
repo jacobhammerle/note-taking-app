@@ -1,12 +1,33 @@
 <template>
-    <div>
-        <form @submit.prevent="createNote">
-            <label for="new-message">Title</label>
-            <input type="text" name="title" v-model="newTitle" />
-            <label for="new-message">Content</label>
-            <input type="text" name="content" v-model="newContent" />
-            <p v-if="feedback">{{feedback}}</p>
-            <button @click="createNote">Create</button>
+    <div class="w-full p-4">
+        <div>
+            <a href="/home" class="cursor-pointer">Back</a>
+        </div>
+        <form autocomplete="off" @submit.prevent="createNote">
+            <div>
+                <label class="block py-3 lato-bold" for="new-message">Title</label>
+                <div class="flex justify-between">
+                    <div class="flex-1 pr-2">
+                        <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="title" v-model="newTitle" />
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <div>
+                            <span class="inline-block cursor-pointer bg-red-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span class="inline-block cursor-pointer bg-orange-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span class="inline-block cursor-pointer bg-yellow-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span class="inline-block cursor-pointer bg-green-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span class="inline-block cursor-pointer bg-blue-500 rounded-full h-6 w-6 mr-1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="block py-3 lato-bold" for="new-message">Content</label>
+                <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8" type="text" name="content" v-model="newContent" />
+            </div>
+            <div>
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg" @click="createNote">Create</button>
+            </div>
         </form>
     </div>
 </template>
@@ -37,6 +58,7 @@ export default {
                 this.newTitle = null
                 this.newContent = null
                 this.feedback = null
+                this.$router.push({ name: "Home" })
             }else{
                 this.feedback = 'You must enter a title and content in order to create a new note'
             }

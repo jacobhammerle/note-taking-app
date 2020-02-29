@@ -1,20 +1,22 @@
 <template>
-    <div class="login container">
-        <form @submit.prevent="login" class="card-panel">
-            <h2 class="center teal-text">Login</h2>
-            <div class="field">
-                <label for="email">Email:</label>
-                <input type="email" name="email" v-model="email" />
+    <div class="max-w-sm mx-auto p-4">
+        <form @submit.prevent="login">
+            <h2 class="text-center text-2xl">Login</h2>
+            <div>
+                <label class="block py-3 lato-bold" for="email">Email:</label>
+                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="email" name="email" v-model="email" />
             </div>
-            <div class="field">
-                <label for="password">Password:</label>
-                <input type="password" name="password" v-model="password" />
+            <div>
+                <label class="block py-3 lato-bold" for="password">Password:</label>
+                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="password" name="password" v-model="password" />
             </div>
-            <p v-if="feedback" class="red-text center">{{feedback}}</p>
-            <div class="field">
-                <button class="btn teal">Login</button>
+            <div class="text-center">
+               <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg mt-4">Login</button>
             </div>
         </form>
+        <div class="text-center text-sm lato-light mt-4">
+            Don't have an account yet? <a class="cursor-pointer lato-regular underline" href="/signup">Signup!</a>
+        </div>
     </div>
 </template>
 
@@ -48,14 +50,4 @@ export default {
 </script>
 
 <style>
-.login{
-    max-width: 400px;
-    margin-top: 60px;
-}
-.login h2{
-    font-size: 2.4em;
-}
-.login .field{
-    margin-bottom: 16px;
-}
 </style>

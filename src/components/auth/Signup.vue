@@ -1,24 +1,26 @@
 <template>
-    <div class="signup container">
-        <form @submit.prevent="signup" class="card-panel">
-            <h2 class="center teal-text">Signup</h2>
-            <div class="field">
-                <label for="email">Email:</label>
-                <input type="email" name="email" v-model="email" />
+    <div class="max-w-sm mx-auto p-4">
+        <form @submit.prevent="signup">
+            <h2 class="text-center text-2xl">Signup</h2>
+            <div>
+                <label class="block py-3 lato-bold" for="email">Email:</label>
+                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="email" name="email" v-model="email" />
             </div>
-            <div class="field">
-                <label for="password">Password:</label>
-                <input type="password" name="password" v-model="password" />
+            <div>
+                <label class="block py-3 lato-bold" for="password">Password:</label>
+                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="password" name="password" v-model="password" />
             </div>
-            <div class="field">
-                <label for="username">Username:</label>
-                <input type="text" name="username" v-model="username" />
+            <div>
+                <label class="block py-3 lato-bold" for="username">Username:</label>
+                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="username" v-model="username" />
             </div>
-            <p class="red-text center" v-if="feedback">{{feedback}}</p>
-            <div class="field center">
-                <button class="btn teal">Signup</button>
+            <div class="text-center">
+               <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg mt-4">Signup</button>
             </div>
         </form>
+        <div class="text-center text-sm lato-light mt-4">
+            Already have an account? <a class="cursor-pointer lato-regular underline" href="/login">Login!</a>
+        </div>
     </div>
 </template>
 
