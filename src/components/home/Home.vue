@@ -1,5 +1,5 @@
 <template>
-    <div class="chat container">
+    <div class="chat">
         <h2 class="center teal-text">Home</h2>
         <div class="card">
             <div class="card-content">
