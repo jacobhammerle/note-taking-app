@@ -30,7 +30,7 @@
         <!--Toast-->
         <Toast v-bind:message="toastMessage" />
         <!--Modal-->
-        <NoteModal v-bind:note="editNote" @reload-data="reloadData" />
+        <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" />
 
     </div>
 </template>

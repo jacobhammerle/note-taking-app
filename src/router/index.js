@@ -31,6 +31,15 @@ const router = new Router({
       }
     },
     {
+      path: '/',
+      name: 'Home',
+      component: Home,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/newNote',
       name: 'NewNote',
       component: NewNote,

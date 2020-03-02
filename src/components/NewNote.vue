@@ -35,6 +35,7 @@
 <script>
 import db from '@/firebase/init'
 import firebase from 'firebase'
+import Toast from '@/components/common/Toast'
 export default {
     name: "NewNote",
     data() {
@@ -60,9 +61,10 @@ export default {
                 this.newTitle = null
                 this.newContent = null
                 this.feedback = null
+                this.toastMessage = null
                 this.$router.push({ name: "Home" })
             }else{
-                this.feedback = 'You must enter a title and content in order to create a new note'
+
             }
         },
         selectColor(color) {
