@@ -12,11 +12,11 @@
                     </div>
                     <div class="flex justify-center items-center">
                         <div>
-                            <span class="inline-block cursor-pointer bg-red-500 rounded-full h-6 w-6 mr-1"></span>
-                            <span class="inline-block cursor-pointer bg-orange-500 rounded-full h-6 w-6 mr-1"></span>
-                            <span class="inline-block cursor-pointer bg-yellow-500 rounded-full h-6 w-6 mr-1"></span>
-                            <span class="inline-block cursor-pointer bg-green-500 rounded-full h-6 w-6 mr-1"></span>
-                            <span class="inline-block cursor-pointer bg-blue-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span @click="selectColor('red')" class="color border-gray-100 border-solid border-2 inline-block cursor-pointer bg-red-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span @click="selectColor('orange')" class="color border-gray-100 border-solid border-2 inline-block cursor-pointer bg-orange-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span @click="selectColor('yellow')" class="color border-gray-100 border-solid border-2 inline-block cursor-pointer bg-yellow-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span @click="selectColor('green')" class="color border-gray-100 border-solid border-2 inline-block cursor-pointer bg-green-500 rounded-full h-6 w-6 mr-1"></span>
+                            <span @click="selectColor('blue')" class="color border-gray-100 border-solid border-2 inline-block cursor-pointer bg-blue-500 rounded-full h-6 w-6 mr-1"></span>
                         </div>
                     </div>
                 </div>
@@ -41,15 +41,17 @@ export default {
         return {
             newTitle: null,
             newContent: null,
+            newColor: null,
             feedback: null
         }
     },
     methods: {
-        createNote(){
-            if(this.newTitle && this.newContent){
+        createNote() {
+            if(this.newTitle && this.newContent && this.newColor){
                 db.collection('notes').add({
                     title: this.newTitle,
                     content: this.newContent,
+                    color: this.newColor,
                     uid: firebase.auth().currentUser.uid,
                     timestamp: Date.now()
                 }).catch(err => {
@@ -62,6 +64,15 @@ export default {
             }else{
                 this.feedback = 'You must enter a title and content in order to create a new note'
             }
+        },
+        selectColor(color) {
+            const colors = document.querySelectorAll('.color')
+            for (var i = 0; i < colors.length; i++) {
+                colors[i].classList.remove('border-gray-800')
+            }
+            const selectedColor = document.querySelector(`.bg-${color}-500`)
+            selectedColor.classList.toggle('border-gray-800')
+            this.newColor = color
         }
     }
 }

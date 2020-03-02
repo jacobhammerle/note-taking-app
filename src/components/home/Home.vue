@@ -21,7 +21,7 @@
                         {{note.timestamp}}
                     </div>
                     <div class="inline-block">
-                        <span class="block bg-orange-500 rounded-full h-4 w-4"></span>
+                        <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
                     </div>
                 </div>
             </div>
@@ -87,6 +87,7 @@ export default {
                         id: doc.id,
                         title: doc.data().title,
                         content: doc.data().content,
+                        color: doc.data().color,
                         timestamp: moment(doc.data().timestamp).format('lll')
                     })
                 }
