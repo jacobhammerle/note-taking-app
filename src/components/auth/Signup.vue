@@ -48,7 +48,7 @@ export default {
                     remove: /[$*_+~.()'"!\-:@]/g,
                     lower: true
                 })
-                let ref = db.collection('users').doc(this.slug)
+                let ref = db.collection('users').doc(this.email)
                 ref.get().then(doc => {
                     if(doc.exists){
                         this.feedback = 'This username already exists'

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="mx-auto mb-4 w-3/6">
-            <input @change="searchNotes()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-full py-2 px-8 mb-2 h-12" placeholder="search..." type="text" name="search" v-model="search" />
+            <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-full py-2 px-8 mb-2 h-12" placeholder="search..." type="text" name="search" v-model="search" />
         </div>
         <div class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4"> 
             <div class="flex-1 bg-gray-200 rounded-lg overflow-hidden shadow shadow-inner pb-4">
@@ -61,7 +61,7 @@ export default {
         }
     },
     created() {
-        let ref = db.collection('notes').where("uid", "==", firebase.auth().currentUser.uid)
+        let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes')
 
         // .orderBy("timestamp", "desc")
 
@@ -88,14 +88,36 @@ export default {
             this.editNote = note
             this.$children[1].toggleModal()
         },
-        searchNotes() {
-            // search notes
+        searchTimeOut() {  
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+
+            this.timer = setTimeout(() => {
+                this.notes = []
+                let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy('title').startAt(this.search).endAt(this.search + "\uf8ff")
+                ref.onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if(change.type == 'added'){
+                            let doc = change.doc
+                            this.notes.push({
+                                id: doc.id,
+                                title: doc.data().title,
+                                content: doc.data().content,
+                                color: doc.data().color,
+                                timestamp: moment(doc.data().timestamp).format('lll')
+                            })
+                        }
+                    })
+                })
+            }, 400);
         },
         reloadData() {
             this.$children[0].toast()
             this.notes = []
             
-            let ref = db.collection('notes').where("uid", "==", firebase.auth().currentUser.uid)
+            let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes')
             ref.onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(change => {
                     if(change.type == 'added'){

@@ -48,8 +48,9 @@ export default {
     },
     methods: {
         createNote() {
+            let user = firebase.auth().currentUser.email
             if(this.newTitle && this.newContent && this.newColor){
-                db.collection('notes').add({
+                db.collection('users').doc(user).collection('notes').add({
                     title: this.newTitle,
                     content: this.newContent,
                     color: this.newColor,

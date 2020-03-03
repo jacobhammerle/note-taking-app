@@ -43,7 +43,7 @@ export default {
             body.classList.toggle('modal-active')
         },
         deleteNote(note) {
-            db.collection("notes").doc(note.id).delete().then(function() {
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(function() {
 
             }).catch(function(error) {
                 console.error(error)
