@@ -5,7 +5,7 @@
             <div v-if="editNote" class="modal-content py-4 text-left px-6">
                 <!--Title-->
                 <div class="flex justify-between items-center pb-3">
-                    <input @change="updateNote(editNote)" type="text" role="textbox" class="outline-none text-2xl font-bold" v-model="editNote.title" />
+                    <Editable @input="updateNote()" v-model="editNote.title" />
                     <div @click="toggleModal()" class="modal-close cursor-pointer z-50">
                         <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                         <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -27,11 +27,16 @@
 <script>
 import db from '@/firebase/init'
 import firebase from 'firebase'
+import Editable from '@/components/common/Editable'
 export default {
     name: 'noteModal',
     props: ['editNote'],
+    components: {
+        Editable
+    },
     data() {
         return {
+
         }
     },
     methods: {
@@ -51,10 +56,11 @@ export default {
             this.toggleModal()
             this.$emit('reload-data')
         },
-        updateNote(note) {
-            db.collection("notes").doc(note.id).update({
-                title: note.title,
-                content: note.content,
+        updateNote() {
+            console.log('updating note')
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
+                title: this.editNote.title,
+                content: this.editNote.content,
                 dateModified: Date.now()
             })
         }
