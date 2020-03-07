@@ -1,55 +1,25 @@
 <template>
-  <div
-    class="w-full resize-none outline-none text-2xl font-bold"
-    ref="editable"
-    contenteditable="true"
-    v-on="listeners"
-  />
+    <div class="w-full resize-none outline-none" contenteditable="true" ref="editable" v-on:blur="onBlurInput"></div>
 </template>
-
 <script>
-export default {
-    name: 'editable',
-    props: {
-        value: {
-            type: String,
-            default: '',
-        }
-    },
-    computed: {
-        listeners() {
-            return { input: this.onInput }
-        }
-    },
-    mounted() {
-        this.$refs.editable.innerText = this.value
-    },
-    methods: {
-        onInput(e) {
-            this.$emit('input', e.target.innerText)
+    export default {
+        props: ['value'],
+        methods: {
+            onBlurInput(){
+                this.$emit('input', this.$refs.editable.innerText);
+            }
         },
-        resetValue() {
+        mounted() {
             this.$refs.editable.innerText = this.value
+        },
+        watch: {
+            value: {
+                handler(newVal, oldVal) {
+                    this.$refs.editable.innerText = newVal;
+                }
+            }
         }
     }
-}
-
-/*
-Vue.directive('click-outside', {
-  bind () {
-      this.event = event => this.vm.$emit(this.expression, event)
-      this.el.addEventListener('click', this.stopProp)
-      document.body.addEventListener('click', this.event)
-  },   
-  unbind() {
-    this.el.removeEventListener('click', this.stopProp)
-    document.body.removeEventListener('click', this.event)
-  },
-
-  stopProp(event) { event.stopPropagation() }
-})
-*/
-
 </script>
 
 <style>
