@@ -11,7 +11,7 @@
                 <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="password" name="password" v-model="password" />
             </div>
             <div class="text-center">
-               <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg mt-4">Login</button>
+               <Btn class="mt-4">Login</Btn>
             </div>
         </form>
         <div class="text-center text-sm lato-light mt-4">
@@ -22,8 +22,12 @@
 
 <script>
 import firebase from 'firebase'
+import Btn from '@/components/common/Btn'
 export default {
     name: 'Login',
+    components: {
+        Btn
+    },
     data(){
         return {
             email: null,

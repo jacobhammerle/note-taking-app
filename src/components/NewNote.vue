@@ -26,7 +26,7 @@
                 <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8" type="text" name="content" v-model="newContent" />
             </div>
             <div>
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full h-12 focus:outline-none" @click="createNote">Create</button>
+                <Btn @click="createNote">Create</Btn>
             </div>
         </form>
     </div>
@@ -36,8 +36,12 @@
 import db from '@/firebase/init'
 import firebase from 'firebase'
 import Toast from '@/components/common/Toast'
+import Btn from '@/components/common/Btn'
 export default {
     name: "NewNote",
+    components: {
+        Btn
+    },
     data() {
         return {
             newTitle: null,

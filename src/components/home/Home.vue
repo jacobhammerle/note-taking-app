@@ -2,10 +2,10 @@
     <div>
         <div class="flex justify-between">
             <div class="ml-4 mb-4 md:w-3/6 sm:w-4/6 xs:w-5/6">
-                <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-full py-2 px-8 mb-2 h-12" placeholder="search by note title..." type="text" name="search" v-model="search" />
+                <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="search by note title..." type="text" name="search" v-model="search" />
             </div>
             <div class="mr-4 mb-4">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full h-12 focus:outline-none" @click="createNewNote">Create Note</button>
+                <Btn @click="createNewNote">Create Note</Btn>
             </div>
         </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4">
@@ -45,12 +45,14 @@ import db from '@/firebase/init'
 import firebase from 'firebase'
 import Toast from '@/components/common/Toast'
 import NoteModal from '@/components/NoteModal'
+import Btn from '@/components/common/Btn'
 export default {
     name: 'Home',
     props: ['name'],
     components: {
         Toast,
-        NoteModal
+        NoteModal,
+        Btn
     },
     data() {
         return {
@@ -85,7 +87,7 @@ export default {
         },
         selectNote(note) {
             this.editNote = note
-            this.$children[1].toggleModal()
+            this.$children[2].toggleModal()
         },
         searchTimeOut() { 
             if (this.timer) {

@@ -15,7 +15,7 @@
                 <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="username" v-model="username" />
             </div>
             <div class="text-center">
-               <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg mt-4">Signup</button>
+               <Btn class="mt-4">Signup</Btn>
             </div>
         </form>
         <div class="text-center text-sm lato-light mt-4">
@@ -28,9 +28,12 @@
 import slugify from 'slugify'
 import db from '@/firebase/init'
 import firebase from 'firebase'
-
+import Btn from '@/components/common/Btn'
 export default {
     name: 'Signup',
+    components: {
+        Btn
+    },
     data() {
         return {
             email: null,
