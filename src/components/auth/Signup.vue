@@ -60,7 +60,8 @@ export default {
                                 user_id: cred.user.uid
                             })
                         }).then(() => {
-                            this.$router.push({ name: 'Chat', params: { name: this.slug }})
+                            this.$emit('input', true)
+                            this.$router.push({ name: 'Home', params: { name: this.slug }})
                         }).catch(err => {
                             console.log(err)
                             this.feedback = err.message

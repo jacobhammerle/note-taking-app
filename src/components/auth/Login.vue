@@ -36,6 +36,7 @@ export default {
             if(this.email && this.password){
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
+                    this.$emit('input', true)
                     this.$router.push({ name: "Home", params: { name: cred.user.email }})
                 }).catch(err => {
                     this.feedback = err.message

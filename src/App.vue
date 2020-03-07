@@ -1,18 +1,34 @@
 <template>
   <div id="app" class="bg-gray-100 h-screen">
-    <Navbar />
-    <div class="max-w-4xl mx-auto pt-20">
-      <router-view />
+    <Navbar @input="updateSignIn" v-bind:is-signed-in="isSignedIn" />
+    <div class="max-w-4xl mx-auto pt-32">
+      <router-view @input="updateSignIn" />
     </div>
   </div>
 </template>
 
 <script>
+import firebase from 'firebase'
 import Navbar from '@/components/layout/Navbar'
 export default {
   name: 'App',
+  data() {
+    return {
+      isSignedIn: false
+    }
+  },
   components: {
     Navbar
+  },
+  methods: {
+    updateSignIn(newVal) {
+      this.isSignedIn = newVal
+    }
+  },
+  mounted(){
+    if(firebase.auth().currentUser){
+      this.isSignedIn = true
+    }
   }
 }
 </script>

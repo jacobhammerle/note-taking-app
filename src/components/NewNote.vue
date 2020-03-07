@@ -26,7 +26,7 @@
                 <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8" type="text" name="content" v-model="newContent" />
             </div>
             <div>
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg" @click="createNote">Create</button>
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full h-12 focus:outline-none" @click="createNote">Create</button>
             </div>
         </form>
     </div>

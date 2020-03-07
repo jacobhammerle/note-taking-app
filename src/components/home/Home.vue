@@ -1,17 +1,14 @@
 <template>
     <div>
-        <div class="mx-auto mb-4 w-3/6">
-            <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-full py-2 px-8 mb-2 h-12" placeholder="search by note title..." type="text" name="search" v-model="search" />
+        <div class="flex justify-between">
+            <div class="ml-4 mb-4 md:w-3/6 sm:w-4/6 xs:w-5/6">
+                <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-full py-2 px-8 mb-2 h-12" placeholder="search by note title..." type="text" name="search" v-model="search" />
+            </div>
+            <div class="mr-4 mb-4">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full h-12 focus:outline-none" @click="createNewNote">Create Note</button>
+            </div>
         </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4">
-            <div v-if="!search" class="create-note flex-1 bg-gray-200 rounded-lg overflow-hidden shadow shadow-inner pb-4">
-                <div class="px-6 pt-4 pb-1">
-                    <div class="font-bold text-xl mb-2">Create a new note!</div>
-                    <p class="text-gray-700 text-base">
-                        Start new note by clicking <a @click="createNewNote" class="cursor-pointer lato-bold underline">HERE</a>.
-                    </p>
-                </div>
-            </div>
             <div @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
                 <div class="px-6 pt-4 pb-16">
                     <div class="font-bold text-xl mb-2">{{note.title}}</div>
@@ -65,9 +62,7 @@ export default {
         }
     },
     created() {
-        let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes')
-
-        // .orderBy("timestamp", "desc")
+        let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
 
         ref.onSnapshot(snapshot => {
             snapshot.docChanges().forEach(change => {
