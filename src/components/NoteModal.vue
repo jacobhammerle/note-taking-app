@@ -16,7 +16,7 @@
                 <Editable v-bind:value="editNote.content" @input="onUpdateNoteContent" />
                 <!--Footer-->
                 <div class="flex justify-end pt-2">
-                    <button @click="deleteNote(editNote)" :class="[editNote.color ? `text-${editNote.color}-600 hover:text-${editNote.color}-500` : 'text-teal-600 hover:text-teal-500',]" class="py-2 px-4 bg-transparent rounded-lg hover:bg-gray-100 mr-2">Delete</button>
+                    <button @click="deleteNote(editNote)" :class="[editNote.color ? `text-${editNote.color}-600 hover:text-${editNote.color}-500 hover:bg-gray-100` : 'text-teal-600 hover:text-teal-500 hover:bg-gray-100',]" class="mr-2 py-2 px-4 rounded-lg">Delete</button>
                     <button @click="toggleModal()" :class="[editNote.color ? `bg-${editNote.color}-500 hover:bg-${editNote.color}-600` : 'bg-teal-500 hover:bg-teal-600',]" class="modal-close text-white font-bold py-2 px-4 rounded-lg">Close</button>
                 </div>
             </div>

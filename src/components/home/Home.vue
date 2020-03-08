@@ -8,7 +8,7 @@
                 <Btn @click="createNewNote">Create Note</Btn>
             </div>
         </div>
-        <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4">
+        <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
             <div @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
                 <div class="px-6 pt-4 pb-16">
                     <div class="font-bold text-xl mb-2">{{note.title}}</div>

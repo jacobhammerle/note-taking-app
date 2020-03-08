@@ -8,12 +8,13 @@
             </div>
             <div v-if="isMenuVisible" class="absolute right-0 mr-4 flex-1 mt-16 bg-white rounded-lg py-2 w-32 shadow-xl text-center select-none">
                 <div v-if="this.isSignedIn">
-                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" @click="closeNav()" :to="{ name: 'Home' }">Home</router-link>
+                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" v-on:click.native="closeNav()" :to="{ name: 'Home' }">Home</router-link>
+                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" v-on:click.native="closeNav()" :to="{ name: 'Settings' }">Settings</router-link>
                     <a class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white cursor-pointer" @click="logout">Logout</a>
                 </div>
                 <div v-else>
-                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" @click="closeNav()" :to="{ name: 'Login' }">Login</router-link>
-                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" @click="closeNav()" :to="{ name: 'Signup' }">Signup</router-link>
+                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" v-on:click.native="closeNav()" :to="{ name: 'Login' }">Login</router-link>
+                    <router-link class="block px-6 py-2 text-gray-800 hover:bg-teal-600 hover:text-white" v-on:click.native="closeNav()" :to="{ name: 'Signup' }">Signup</router-link>
                 </div>
             </div>
         </div>

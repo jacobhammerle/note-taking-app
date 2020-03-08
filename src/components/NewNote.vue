@@ -1,14 +1,14 @@
 <template>
     <div class="w-full p-4">
-        <div>
-            <a href="/home" class="cursor-pointer">Back</a>
+        <div class="pb-8">
+            <a href="/home" class="cursor-pointer text-gray-500 hover:underline">return back home</a>
         </div>
         <form autocomplete="off" @submit.prevent="createNote">
             <div>
                 <label class="block py-3 lato-bold" for="new-message">Title</label>
                 <div class="flex justify-between">
                     <div class="flex-1 pr-2">
-                        <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="title" v-model="newTitle" />
+                        <input class="w-full outline-none shadow rounded-lg p-4 mb-2" type="text" name="title" v-model="newTitle" />
                     </div>
                     <div class="flex justify-center items-center">
                         <div>
@@ -28,6 +28,7 @@
             <div>
                 <Btn @click="createNote">Create</Btn>
             </div>
+            <div class="text-red-500 py-4" v-if="feedback">{{ feedback }}</div>
         </form>
     </div>
 </template>
@@ -53,7 +54,17 @@ export default {
     methods: {
         createNote() {
             let user = firebase.auth().currentUser.email
-            if(this.newTitle && this.newContent && this.newColor){
+
+            if(!this.newTitle){
+                this.feedback = "title is required"
+                return
+            }
+            if(!this.newContent){
+                this.feedback = "content is required"
+                return
+            }
+
+            if(this.newTitle && this.newContent){
                 db.collection('users').doc(user).collection('notes').add({
                     title: this.newTitle,
                     content: this.newContent,
@@ -69,7 +80,7 @@ export default {
                 this.toastMessage = null
                 this.$router.push({ name: "Home" })
             }else{
-
+                this.feedback = "there was an error creating the note"
             }
         },
         selectColor(color) {

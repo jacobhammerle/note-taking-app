@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Signup from '@/components/auth/Signup'
 import Login from '@/components/auth/Login'
 import Home from '@/components/home/Home'
+import Settings from '@/components/Settings'
 import NewNote from '@/components/NewNote'
 import firebase from 'firebase'
 
@@ -35,6 +36,14 @@ const router = new Router({
       name: 'Home',
       component: Home,
       props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
       meta: {
         requiresAuth: true
       }
