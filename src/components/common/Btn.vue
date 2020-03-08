@@ -6,7 +6,6 @@
 <script>
     export default {
         name: 'btn',
-        props: ['label'],
         methods: {
             onClick(){
                 this.$emit('click')

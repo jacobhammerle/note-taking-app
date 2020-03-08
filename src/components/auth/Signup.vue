@@ -14,6 +14,7 @@
                 <label class="block py-3 lato-bold" for="username">Username:</label>
                 <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="username" v-model="username" />
             </div>
+            <div class="text-red-500 py-4" v-if="feedback">{{ feedback }}</div>
             <div class="text-center">
                <Btn class="mt-4">Signup</Btn>
             </div>
@@ -64,16 +65,15 @@ export default {
                             })
                         }).then(() => {
                             this.$emit('input', true)
+                            this.feedback = null
                             this.$router.push({ name: 'Home', params: { name: this.slug }})
                         }).catch(err => {
-                            console.log(err)
                             this.feedback = err.message
                         })
-                        this.feedback = 'This username is free to use'
                     }
                 })
             }else{
-                this.feedback = "You must enter all fields"
+                this.feedback = "Please fill in all fields"
             }
         }
     }

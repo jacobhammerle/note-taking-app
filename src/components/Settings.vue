@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="p-4">
         <div class="text-2xl mb-4">
             Settings
         </div>

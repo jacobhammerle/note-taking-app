@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="flex justify-between">
-            <div class="ml-4 mb-4 md:w-3/6 sm:w-4/6 xs:w-5/6">
-                <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="search by note title..." type="text" name="search" v-model="search" />
+            <div class="ml-4 mb-4 w-4/6 lg:w-4/6 md:w-4/6">
+                <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="Search by note title..." type="text" name="search" v-model="search" />
             </div>
             <div class="mr-4 mb-4">
                 <Btn @click="createNewNote">Create Note</Btn>
@@ -13,7 +13,7 @@
                 <div class="px-6 pt-4 pb-16">
                     <div class="font-bold text-xl mb-2">{{note.title}}</div>
                     <p class="text-gray-700 text-base">
-                        {{note.content}}
+                        {{displayContent(note.content)}}
                     </p>
                 </div>
                 <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
@@ -118,13 +118,16 @@ export default {
                         })
                     }
                 })
-            }, 400);
+            }, 400)
+        },
+        displayContent(content) {
+            return content.trunc(200)
         },
         reloadData() {
-            this.$children[0].toast()
+            this.$children[1].toast()
             this.notes = []
             
-            let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes')
+            let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
             ref.onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(change => {
                     if(change.type == 'added'){
@@ -139,6 +142,12 @@ export default {
                     }
                 })
             })
+        }
+    },
+    mounted() {
+        String.prototype.trunc = String.prototype.trunc ||
+        function(n){
+            return (this.length > n) ? this.substr(0, n-1) + '...' : this
         }
     }
 }
