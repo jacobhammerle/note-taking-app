@@ -12,9 +12,7 @@
             <div @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
                 <div class="px-6 pt-4 pb-16">
                     <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                    <p class="text-gray-700 text-base">
-                        {{displayContent(note.content)}}
-                    </p>
+                    <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
                 </div>
                 <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
                     <div class="flex justify-between">

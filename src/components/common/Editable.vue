@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full resize-none outline-none" contenteditable="true" ref="editable" v-on:blur="onBlurInput"></div>
+    <div class="w-full resize-none outline-none leading-relaxed" contenteditable="true" ref="editable" v-on:blur="onBlurInput"></div>
 </template>
 <script>
     export default {
