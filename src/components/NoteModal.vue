@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <!--Body-->
-                <Editable v-bind:value="editNote.content" @input="onUpdateNoteContent" />
+                <Editable id="content" v-bind:value="editNote.content" @input="onUpdateNoteContent" />
                 <!--Footer-->
                 <div class="flex justify-end pt-2">
                     <button @click="deleteNote(editNote)" :class="[editNote.color ? `text-${editNote.color}-600 hover:text-${editNote.color}-500 hover:bg-gray-100` : 'text-teal-600 hover:text-teal-500 hover:bg-gray-100',]" class="mr-2 py-2 px-4 rounded-lg">Delete</button>

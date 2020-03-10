@@ -10,10 +10,6 @@
                 <label class="block py-3 lato-bold" for="password">Password:</label>
                 <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="password" name="password" v-model="password" />
             </div>
-            <div>
-                <label class="block py-3 lato-bold" for="username">Username:</label>
-                <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="username" v-model="username" />
-            </div>
             <div class="text-red-500 py-4" v-if="feedback">{{ feedback }}</div>
             <div class="text-center">
                <Btn class="mt-4">Signup</Btn>
@@ -26,7 +22,6 @@
 </template>
 
 <script>
-import slugify from 'slugify'
 import db from '@/firebase/init'
 import firebase from 'firebase'
 import Btn from '@/components/common/Btn'
@@ -39,34 +34,35 @@ export default {
         return {
             email: null,
             password: null,
-            username: null,
             feedback: null,
             slug: null
         }
     },
     methods: {
         signup(){
-            if(this.username && this.email && this.password){
-                this.slug = slugify(this.username, {
-                    replacement: '-',
-                    remove: /[$*_+~.()'"!\-:@]/g,
-                    lower: true
-                })
+            if(this.email && this.password){
                 let ref = db.collection('users').doc(this.email)
                 ref.get().then(doc => {
                     if(doc.exists){
-                        this.feedback = 'This username already exists'
+                        this.feedback = 'This email already exists'
                     }else{
                         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                         .then(cred => {
+                            // set user id
                             ref.set({
-                                username: this.slug,
                                 user_id: cred.user.uid
+                            })
+                            // add user's first note to welcome them to the app
+                            ref.collection('notes').add({
+                                title: 'Welcome!',
+                                content: 'We are so excited you chose our tool for your note taking needs. The app is quickly evolving so always be on the lookout for new features. Enjoy!',
+                                color: 'blue',
+                                timestamp: Date.now()
                             })
                         }).then(() => {
                             this.$emit('input', true)
                             this.feedback = null
-                            this.$router.push({ name: 'Home', params: { name: this.slug }})
+                            this.$router.push({ name: 'Home' })
                         }).catch(err => {
                             this.feedback = err.message
                         })

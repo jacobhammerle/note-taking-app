@@ -69,7 +69,6 @@ export default {
                     title: this.newTitle,
                     content: this.newContent,
                     color: this.newColor,
-                    uid: firebase.auth().currentUser.uid,
                     timestamp: Date.now()
                 }).catch(err => {
                     console.log(err)
