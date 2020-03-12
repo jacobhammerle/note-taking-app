@@ -5,7 +5,7 @@
                 <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="Search by note title..." type="text" name="search" v-model="search" />
             </div>
             <div class="mr-4 mb-4">
-                <Btn @click="createNewNote">Create Note</Btn>
+                <Btn @click="createNewNote">Create</Btn>
             </div>
         </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
