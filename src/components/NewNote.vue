@@ -22,21 +22,24 @@
                 </div>
             </div>
             <div>
-                <label class="block py-3 lato-bold" for="new-message">Content</label>
+                <label class="block py-3 lato-bold" for="new-note">Content</label>
                 <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8 leading-relaxed" type="text" name="content" v-model="newContent" />
             </div>
             <div>
-                <label class="block py-3 lato-bold" for="new-message">List</label>
-                <ul id="list"> 
-                    <li id="item-1" class="flex justify-between shadow rounded-lg bg-white p-4 mb-2">
-                        <div contenteditable class="w-full outline-none"></div>
-                        <span contenteditable="false" class="float-right cursor-pointer text-gray-500 hover:text-red-600" @click="deleteRow('item-1')">Delete</span>
+                <Btn @click="createNote">Create</Btn>
+            </div>
+            <div>
+                <label class="block py-3 lato-bold" for="new-list">List</label>
+                <ul id="list" v-for="(item, index) in list" :key="item.id"> 
+                    <li class="flex justify-between shadow rounded-lg bg-white p-4 mb-2">
+                        <Editable v-bind:value="item.text" v-bind:index="index" @change="updateListItem" />
+                        <span contenteditable="false" class="float-right cursor-pointer text-gray-500 hover:text-red-600" @click="deleteRow(index)">Delete</span>
                     </li>
                 </ul>
                 <button class="mb-8 mt-2 rounded-md bg-gray-300 text-gray-700 px-2 py-1 hover:bg-gray-400 focus:outline-none" @click="addRow()">Add an item</button>
-            </div>
-            <div>
-                <Btn @click="createNote">Create</Btn>
+                <div>
+                    <Btn @click="createList">Create List</Btn>
+                </div>
             </div>
             <div class="text-red-500 py-4" v-if="feedback">{{ feedback }}</div>
         </form>
@@ -48,10 +51,12 @@ import db from '@/firebase/init'
 import firebase from 'firebase'
 import Toast from '@/components/common/Toast'
 import Btn from '@/components/common/Btn'
+import Editable from '@/components/common/Editable'
 export default {
     name: "NewNote",
     components: {
-        Btn
+        Btn,
+        Editable
     },
     data() {
         return {
@@ -59,15 +64,12 @@ export default {
             newContent: null,
             newColor: null,
             feedback: null,
-            count: 2
+            count: 2,
+            list: [ {text: '', completed: false }]
         }
     },
     methods: {
         createNote() {
-            // get all items in list
-            let listItems = document.getElementById("list").getElementsByTagName("li")
-            console.log(listItems)
-
             let user = firebase.auth().currentUser.email
 
             if(!this.newTitle){
@@ -97,6 +99,9 @@ export default {
                 this.feedback = "there was an error creating the note"
             }
         },
+        createList() {
+            console.log(this.list)
+        },
         selectColor(color) {
             const colors = document.querySelectorAll('.color')
             for (var i = 0; i < colors.length; i++) {
@@ -107,26 +112,17 @@ export default {
             this.newColor = color
         },
         addRow() {
-            let ul = document.getElementById("list")
-            let li = document.createElement("li")
-            li.setAttribute("class", "flex justify-between shadow rounded-lg bg-white p-4 mb-2")
-            li.setAttribute("id", `item-${this.count}`)
-            ul.appendChild(li)
-
-            let div = document.createElement("div")
-            div.contentEditable = true
-            div.setAttribute("class", "w-full outline-none")
-            li.appendChild(div)
-
-            let span = document.createElement("span")
-            span.contentEditable = false
-            span.setAttribute("class", "float-right cursor-pointer text-gray-500 hover:text-red-600")
-            span.textContent = 'Delete'
-            span.setAttribute("onclick", `deleteRow('item-${this.count++}')`)
-            li.appendChild(span)
+            this.list.push({ text: '', completed: false })
         },
-        deleteRow(item) {
-            console.log(item)
+        deleteRow(index) {
+            if(this.list.length > 1){
+                this.list.splice(index, 1)
+            }else{
+                this.feedback = "The list must contain at least one item"
+            }
+        },
+        updateListItem(data) {
+            this.list[data.index] = { text: data.text, completed: false }
         }
     }
 }

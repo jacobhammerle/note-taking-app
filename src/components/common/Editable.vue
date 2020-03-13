@@ -5,11 +5,23 @@
     export default {
         props: {
             value: null,
+            index: null,
             id: null
+        },
+        data() {
+            return {
+                data: {
+                    text: null,
+                    index: null
+                }
+            }
         },
         methods: {
             onBlurInput(){
-                this.$emit('input', this.$refs.editable.innerText);
+                this.data.text = this.$refs.editable.innerText
+                this.data.index = this.index
+                this.$emit('input', this.$refs.editable.innerText)
+                this.$emit('change', this.data)
             },
             setCarot(){
                 let el = document.getElementById("content")
