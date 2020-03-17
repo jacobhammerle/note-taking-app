@@ -28,11 +28,11 @@
                         </div>
                     </div>
                 </div>
-                <div v-else>
+                <div v-else @click="selectNote(note)" class="modal-open">
                     <div class="px-6 pt-4 pb-16" v-if="note.list">
                         <div class="font-bold text-xl mb-2">{{note.title}}</div>
                         <div v-for="(item, index) in note.list" class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            <input class="mr-2 leading-tight" type="checkbox" @change="checkItem(note.id, note.list)" v-model="item.completed"> {{ item.text }}
+                            <input class="mr-2 leading-tight" type="checkbox" v-model="item.completed"> {{ item.text }}
                         </div>
                     </div>
                     <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
@@ -110,13 +110,6 @@ export default {
         selectNote(note) {
             this.editNote = note
             this.$children[2].toggleModal()
-        },
-        checkItem(id, list) {
-            console.log(list)
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(id).update({
-                list: list,
-                dateModified: Date.now()
-            })
         },
         searchTimeOut() { 
             if (this.timer) {
