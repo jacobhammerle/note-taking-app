@@ -9,18 +9,40 @@
             </div>
         </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
-            <div @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
-                <div class="px-6 pt-4 pb-16">
-                    <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                    <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
-                </div>
-                <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
-                    <div class="flex justify-between">
-                        <div class="inline-block lato-light text-xs">
-                            {{note.timestamp}}
+
+            <!-- Card Section -->
+            <div v-for="note in notes" :key="note.id" class="bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
+                <div @click="selectNote(note)" v-if="note.type == 1" class="modal-open">
+                    <div class="px-6 pt-4 pb-16">
+                        <div class="font-bold text-xl mb-2">{{note.title}}</div>
+                        <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
+                    </div>
+                    <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
+                        <div class="flex justify-between">
+                            <div class="inline-block lato-light text-xs">
+                                {{note.timestamp}}
+                            </div>
+                            <div class="inline-block">
+                                <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
+                            </div>
                         </div>
-                        <div class="inline-block">
-                            <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="px-6 pt-4 pb-16" v-if="note.list">
+                        <div class="font-bold text-xl mb-2">{{note.title}}</div>
+                        <div v-for="item in note.list" class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            <input class="mr-2 leading-tight" type="checkbox" @click="checkItem(note.id, note.list)" v-model="item.completed"> {{ item.text }}
+                        </div>
+                    </div>
+                    <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
+                        <div class="flex justify-between">
+                            <div class="inline-block lato-light text-xs">
+                                {{note.timestamp}}
+                            </div>
+                            <div class="inline-block">
+                                <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,8 +92,10 @@ export default {
                     let doc = change.doc
                     this.notes.push({
                         id: doc.id,
+                        type: doc.data().type,
                         title: doc.data().title,
                         content: doc.data().content,
+                        list: doc.data().list,
                         color: doc.data().color,
                         timestamp: moment(doc.data().timestamp).format('lll')
                     })
@@ -86,6 +110,12 @@ export default {
         selectNote(note) {
             this.editNote = note
             this.$children[2].toggleModal()
+        },
+        checkItem(id, list) {
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(id).update({
+                list: list,
+                dateModified: Date.now()
+            })
         },
         searchTimeOut() { 
             if (this.timer) {
@@ -107,8 +137,10 @@ export default {
                                 let doc = change.doc
                                 this.notes.push({
                                     id: doc.id,
+                                    type: doc.data().type,
                                     title: doc.data().title,
                                     content: doc.data().content,
+                                    list: doc.data().list,
                                     color: doc.data().color,
                                     timestamp: moment(doc.data().timestamp).format('lll')
                                 })
@@ -119,7 +151,7 @@ export default {
             }, 400)
         },
         displayContent(content) {
-            return content.trunc(200)
+            return content
         },
         reloadData() {
             this.$children[1].toast()
@@ -132,8 +164,10 @@ export default {
                         let doc = change.doc
                         this.notes.push({
                             id: doc.id,
+                            type: doc.data().type,
                             title: doc.data().title,
                             content: doc.data().content,
+                            list: doc.data().list,
                             color: doc.data().color,
                             timestamp: moment(doc.data().timestamp).format('lll')
                         })

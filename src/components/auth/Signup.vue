@@ -55,6 +55,7 @@ export default {
                             // add user's first note to welcome them to the app
                             ref.collection('notes').add({
                                 title: 'Welcome!',
+                                type: 1,
                                 content: 'We are so excited you chose our tool for your note taking needs. The app is quickly evolving so always be on the lookout for new features. Enjoy!',
                                 color: 'blue',
                                 timestamp: Date.now()
