@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full resize-none outline-none leading-relaxed" v-bind:id="id" contenteditable="true" ref="editable" v-on:blur="onBlurInput"></div>
+    <div class="w-full resize-none outline-none leading-relaxed" v-bind:id="id" contenteditable="true" ref="editable" @blur="onBlurInput"></div>
 </template>
 <script>
     export default {
@@ -20,8 +20,8 @@
             onBlurInput(){
                 this.data.text = this.$refs.editable.innerText
                 this.data.index = this.index
-                this.$emit('input', this.$refs.editable.innerText)
                 this.$emit('change', this.data)
+                this.$emit('input', this.$refs.editable.innerText)
             },
             setCarot(){
                 let el = document.getElementById("content")

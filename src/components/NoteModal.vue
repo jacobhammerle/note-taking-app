@@ -18,14 +18,15 @@
                 </div>
                 <div v-else class="pb-2">
                     <div v-for="(item, index) in editNote.list" class="text-gray-700 flex p-1 cursor-pointer rounded-md hover:bg-gray-200">
-                        <input type="checkbox" v-model="item.completed" class="flex-start flex-shrink-0 self-start rounded-sm h-4 w-4 mt-1 ml-1 mr-2">
+                        <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-2">
                         <div class="flex-auto">
-                            {{ item.text }}
+                            <Editable id="content" class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:index="index" @change="onUpdateListItem" />
                         </div>
-                        <div class="flex-end self-start ml-3 mr-1">
-                           <i @click="deleteItem(editNote, index)" class="far fa-trash-alt text-md hover:text-red-600"></i>
+                        <div class="flex-end self-start mt-1 ml-3 mr-2">
+                           <i @click="deleteItem(index)" class="far fa-trash-alt text-md hover:text-red-600"></i>
                         </div>
                     </div>
+                    <button class="mb-4 ml-2 mt-2 rounded-md bg-gray-300 text-gray-700 px-2 py-1 hover:bg-gray-400 focus:outline-none" @click="addRow()">Add an item</button>
                 </div>
                 <!--Footer-->
                 <div class="flex justify-end pt-2">
@@ -60,11 +61,15 @@ export default {
             modal.classList.toggle('pointer-events-none')
             body.classList.toggle('modal-active')
         },
-        checkItem(id, list) {
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(id).update({
-                list: list,
+        checkItem(index, item) {
+            this.editNote.list[index] = { text: item.text, completed: item.completed }
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
+                list: this.editNote.list,
                 dateModified: Date.now()
             })
+        },
+        addRow() {
+            this.editNote.list.push({ text: '', completed: false })
         },
         deleteNote(note) {
             db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(function() {
@@ -75,10 +80,10 @@ export default {
             this.toggleModal()
             this.$emit('reload-data')
         },
-        deleteItem(note, index) {
-            note.list.splice(index, 1)
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).update({
-                list: note.list,
+        deleteItem(index) {
+            this.editNote.list.splice(index, 1)
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
+                list: this.editNote.list,
                 dateModified: Date.now()
             })
         },
@@ -86,6 +91,13 @@ export default {
             this.editNote.content = newContent;
             db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
                 content: this.editNote.content,
+                dateModified: Date.now()
+            })
+        },
+        onUpdateListItem(data) {
+            this.editNote.list[data.index] = { text: data.text }
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
+                list: this.editNote.list,
                 dateModified: Date.now()
             })
         },

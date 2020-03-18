@@ -11,38 +11,25 @@
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
 
             <!-- Card Section -->
-            <div v-for="note in notes" :key="note.id" class="bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
-                <div @click="selectNote(note)" v-if="note.type == 1 || !note.type" class="modal-open">
-                    <div class="px-6 pt-4 pb-16">
-                        <div class="font-bold text-xl mb-2">{{note.title}}</div>
+            <div  @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
+                <div class="px-6 pt-4 pb-16">
+                    <div class="font-bold text-xl mb-2">{{note.title}}</div>
+                    <div v-if="note.type == 1 || !note.type">
                         <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
                     </div>
-                    <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
-                        <div class="flex justify-between">
-                            <div class="inline-block lato-light text-xs">
-                                {{note.timestamp}}
-                            </div>
-                            <div class="inline-block">
-                                <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
-                            </div>
+                    <div v-else>
+                        <div v-for="(item, index) in note.list" class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            <input class="mr-2 leading-tight" type="checkbox" disabled="true" v-model="item.completed"> {{ item.text }}
                         </div>
                     </div>
                 </div>
-                <div v-else @click="selectNote(note)" class="modal-open">
-                    <div class="px-6 pt-4 pb-16" v-if="note.list">
-                        <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                        <div v-for="(item, index) in note.list" class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            <input class="mr-2 leading-tight" type="checkbox" v-model="item.completed"> {{ item.text }}
+                <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
+                    <div class="flex justify-between">
+                        <div class="inline-block lato-light text-xs">
+                            {{note.timestamp}}
                         </div>
-                    </div>
-                    <div class="absolute bottom-0 w-full px-6 pb-4 pt-3">
-                        <div class="flex justify-between">
-                            <div class="inline-block lato-light text-xs">
-                                {{note.timestamp}}
-                            </div>
-                            <div class="inline-block">
-                                <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
-                            </div>
+                        <div class="inline-block">
+                            <span :class="[note.color ? `bg-${note.color}-500` : 'bg-gray-200',]" class="block rounded-full h-4 w-4"></span>
                         </div>
                     </div>
                 </div>
