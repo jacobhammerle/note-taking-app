@@ -39,10 +39,10 @@
         </div>
         <div v-if="!displayNote">
             <label class="block py-3 lato-bold" for="new-list">List</label>
-            <ul id="list" v-for="(item, index) in list" :key="item.id"> 
-                <li class="flex justify-between shadow rounded-lg bg-white p-4 mb-2">
-                    <Editable v-bind:value="item.text" v-bind:index="index" @change="updateListItem" />
-                    <span contenteditable="false" class="float-right cursor-pointer text-gray-500 hover:text-red-600" @click="deleteRow(index)">Delete</span>
+            <ul id="list"> 
+                <li v-for="(item, index) in list" :key="item.id" class="flex justify-between shadow rounded-lg bg-white p-4 mb-2">
+                    <input :id="index" class="w-full outline-none" type="text" v-model="item.text" @keyup.enter="addRowFromEnter(index)" @change="updateListItem(item, index)" />
+                    <i @click="deleteRow(index)" class="far fa-trash-alt float-right cursor-pointer text-xl text-gray-500 mt-1 hover:text-red-600"></i>
                 </li>
             </ul>
             <button class="mb-8 mt-2 rounded-md bg-gray-300 text-gray-700 px-2 py-1 hover:bg-gray-400 focus:outline-none" @click="addRow()">Add an item</button>
@@ -109,6 +109,7 @@ export default {
             }
         },
         createList() {
+            console.log(this.list)
             let user = firebase.auth().currentUser.email
 
             if(!this.newTitle){
@@ -146,6 +147,16 @@ export default {
         addRow() {
             this.list.push({ text: '', completed: false })
         },
+        addRowFromEnter(index) {
+            let lastIndex = (this.list.length - 1)
+            if(lastIndex == index){
+                this.list.push({ text: '', completed: false })
+                setTimeout(function(){ 
+                    let el = document.getElementById(index + 1)
+                    el.focus()
+                }, 100);
+            }
+        },
         deleteRow(index) {
             if(this.list.length > 1){
                 this.list.splice(index, 1)
@@ -153,8 +164,8 @@ export default {
                 this.feedback = "The list must contain at least one item"
             }
         },
-        updateListItem(data) {
-            this.list[data.index] = { text: data.text, completed: false }
+        updateListItem(item, index) {
+            this.list[index] = { text: item.text, completed: false }
         },
         toggleDisplay() {
             this.displayNote = !this.displayNote

@@ -23,7 +23,7 @@
                 this.$emit('change', this.data)
                 this.$emit('input', this.$refs.editable.innerText)
             },
-            setCarot(){
+            setContentCarot(){
                 let el = document.getElementById("content")
                 el.focus()
             }
@@ -31,8 +31,8 @@
         mounted() {
             this.$refs.editable.innerText = this.value
 
-            if(this.id){
-                this.setCarot()
+            if(this.id == 'content'){
+                this.setContentCarot()
             }
         },
         watch: {
@@ -40,8 +40,8 @@
                 handler(newVal, oldVal) {
                     this.$refs.editable.innerText = newVal
 
-                    if(this.id){
-                        this.setCarot()
+                    if(this.id == 'content'){
+                        this.setContentCarot()
                     }
                 }
             }

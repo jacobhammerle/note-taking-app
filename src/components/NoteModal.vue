@@ -18,9 +18,9 @@
                 </div>
                 <div v-else class="pb-2">
                     <div v-for="(item, index) in editNote.list" class="text-gray-700 flex p-1 cursor-pointer rounded-md hover:bg-gray-200">
-                        <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-2">
+                        <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 cursor-pointer self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-2">
                         <div class="flex-auto">
-                            <Editable id="content" class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:index="index" @change="onUpdateListItem" />
+                            <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:index="index" @change="onUpdateListItem" />
                         </div>
                         <div class="flex-end self-start mt-1 ml-3 mr-2">
                            <i @click="deleteItem(index)" class="far fa-trash-alt text-md hover:text-red-600"></i>
