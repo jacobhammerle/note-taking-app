@@ -79,6 +79,7 @@ export default {
             })
             this.toggleModal()
             this.$emit('reload-data')
+            this.$emit('delete')
         },
         deleteItem(index) {
             this.editNote.list.splice(index, 1)

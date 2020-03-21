@@ -2,7 +2,7 @@
     <div class="alert-toast fixed bottom-0 right-0 m-8 w-5/6 md:w-full max-w-sm hidden">
         <input type="checkbox" class="hidden" id="footertoast">
 
-        <label class="close cursor-pointer flex items-start justify-between w-full p-2 bg-gray-500 h-auto rounded shadow-lg text-white" title="close" for="footertoast">
+        <label :class="[color ? `bg-${color}-500` : 'bg-gray-500',]" class="close cursor-pointer flex items-start justify-between w-full p-2 h-auto rounded shadow-lg text-white" title="close" for="footertoast">
         {{ message }}
         
         <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
@@ -15,7 +15,7 @@
 <script>
 export default {
     name: 'toast',
-    props: ['message'],
+    props: ['message', 'color'],
     data() {
         return {
 

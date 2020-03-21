@@ -36,9 +36,9 @@
             </div>
 
             <!--Toast-->
-            <Toast v-bind:message="toastMessage" />
+            <Toast v-bind:color="toastColor" v-bind:message="toastMessage" />
             <!--Modal-->
-            <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" />
+            <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" @delete="deleteNote" />
         </div>
         <div v-else class="w-full text-center p-8 md:text-lg sm:text-md">
             no notes were found
@@ -67,7 +67,8 @@ export default {
             editNote: null,
             search: null,
             emptySearch: false,
-            toastMessage: 'Note Deleted'
+            toastMessage: '',
+            toastColor: ''
         }
     },
     created() {
@@ -106,11 +107,14 @@ export default {
 
             this.timer = setTimeout(() => {
                 this.notes = []
-
                 let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy('title').startAt(this.search).endAt(this.search + "\uf8ff")
                 ref.onSnapshot(snapshot => {
-                    if(snapshot.empty){
-                        this.emptySearch = true
+                    console.log(this.search)
+                    if(!this.search){
+                        this.emptySearch = false
+                        this.reloadData()
+                    }else if(snapshot.empty){
+                         this.emptySearch = true
                     }else{
                         this.emptySearch = false
                         snapshot.docChanges().forEach(change => {
@@ -135,9 +139,7 @@ export default {
             return content
         },
         reloadData() {
-            this.$children[1].toast()
             this.notes = []
-            
             let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
             ref.onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(change => {
@@ -155,6 +157,11 @@ export default {
                     }
                 })
             })
+        },
+        deleteNote() {
+            this.toastColor = 'teal'
+            this.toastMessage = 'Note Successfully Deleted!'
+            this.$children[1].toast()
         }
     },
     mounted() {
