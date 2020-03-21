@@ -4,7 +4,8 @@
             Logo
         </div>
         <div class="flex-wrap">
-            <div @click="clickProfile" class="block cursor-pointer float-right bg-teal-600 rounded-full shadow-lg h-12 w-12">
+            <div @click="clickProfile">
+                <avatar class="block cursor-pointer float-right bg-teal-600 rounded-full shadow-lg h-12 w-12" backgroundColor="#38a89d" v-bind:username="username()"></avatar>
             </div>
             <div v-if="isMenuVisible" class="absolute right-0 mr-4 flex-1 mt-16 bg-white rounded-lg py-2 w-32 shadow-xl text-center select-none z-10">
                 <div v-if="this.isSignedIn">
@@ -23,9 +24,13 @@
 
 <script>
 import firebase from 'firebase'
+import Avatar from 'vue-avatar'
 export default {
     name: 'Navbar',
-    props: ['isSignedIn'],
+    props: ['isSignedIn', 'userSettings'],
+    components: {
+        Avatar
+    },
     data() {
         return {
             isMenuVisible: false,
@@ -45,6 +50,9 @@ export default {
         },
         clickProfile(){
             this.isMenuVisible = !this.isMenuVisible
+        },
+        username(){
+            return this.userSettings.firstName + ' ' + this.userSettings.lastName
         }
     }
 }

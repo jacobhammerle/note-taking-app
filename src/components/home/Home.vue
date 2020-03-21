@@ -73,7 +73,6 @@ export default {
     },
     created() {
         let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
-
         ref.onSnapshot(snapshot => {
             snapshot.docChanges().forEach(change => {
                 if(change.type == 'added'){
@@ -136,7 +135,7 @@ export default {
             }, 400)
         },
         displayContent(content) {
-            return content
+            return content.trunc(200)
         },
         reloadData() {
             this.notes = []

@@ -4,17 +4,22 @@
             Settings
         </div>
         <div>
-            <form @submit.prevent="updateUserSettings">
-                <div>
-                    <label class="block py-3 lato-bold">First Name</label>
-                    <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="firstName" v-model="userSettings.firstName" />
-                </div>
+            <form autocomplete="off" @submit.prevent="updateUserSettings">
+                <div class="flex lg:justify-between">
+                    <div class="w-full">
+                        <div>
+                            <label class="block py-3 lato-bold">First Name</label>
+                            <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="firstName" v-model="userSettings.firstName" />
+                        </div>
 
-                <div>
-                    <label class="block py-3 lato-bold">Last Name</label>
-                    <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="lastName" v-model="userSettings.lastName" />
+                        <div>
+                            <label class="block py-3 lato-bold">Last Name</label>
+                            <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="lastName" v-model="userSettings.lastName" />
+                        </div>
+                    </div>
+                    <div class="w-full">
+                    </div>
                 </div>
-                
                 <div>
                     <Btn class="mt-4">Save</Btn>
                 </div>
