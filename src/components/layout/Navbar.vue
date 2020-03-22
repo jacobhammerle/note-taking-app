@@ -9,13 +9,13 @@
             </div>
             <div v-if="isMenuVisible" class="absolute right-0 mr-4 flex-1 mt-16 bg-white rounded-lg py-2 w-32 shadow-xl text-center select-none z-10">
                 <div v-if="this.isSignedIn">
-                    <router-link class="block px-6 py-2 hover:bg-teal-600 hover:text-white text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Home' }">Home</router-link>
-                    <router-link class="block px-6 py-2 hover:bg-teal-600 hover:text-white text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Settings' }">Settings</router-link>
-                    <a class="block px-6 py-2 hover:bg-teal-600 hover:text-white text-gray-800 cursor-pointer" @click="logout">Logout</a>
+                    <router-link class="white-text block px-6 py-2 hover:bg-teal-600 text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Home' }">Home</router-link>
+                    <router-link class="white-text block px-6 py-2 hover:bg-teal-600 text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Settings' }">Settings</router-link>
+                    <a class="white-text block px-6 py-2 hover:bg-teal-600 text-gray-800 cursor-pointer" @click="logout">Logout</a>
                 </div>
                 <div v-else>
-                    <router-link class="block px-6 py-2 hover:bg-teal-600 hover:text-white text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Login' }">Login</router-link>
-                    <router-link class="block px-6 py-2 hover:bg-teal-600 hover:text-white text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Signup' }">Signup</router-link>
+                    <router-link class="white-text block px-6 py-2 hover:bg-teal-600 text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Login' }">Login</router-link>
+                    <router-link class="white-text block px-6 py-2 hover:bg-teal-600 text-gray-800" v-on:click.native="closeNav()" :to="{ name: 'Signup' }">Signup</router-link>
                 </div>
             </div>
         </div>
@@ -59,5 +59,10 @@ export default {
 </script>
 
 <style>
-
+.white-text:hover {
+    color: #FFFFFF;
+}
+.router-link-active {
+    color: #FFFFFF!important;
+}
 </style>

@@ -20,7 +20,7 @@
                     <div v-for="(item, index) in editNote.list" class="text-gray-700 flex p-1 cursor-pointer rounded-md hover:bg-gray-200">
                         <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 cursor-pointer self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-1">
                         <div class="flex-auto">
-                            <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:index="index" @change="onUpdateListItem" />
+                            <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:completed="item.completed" v-bind:index="index" @change="onUpdateListItem" />
                         </div>
                         <div class="flex-end self-start mt-1 ml-3 mr-2">
                            <i @click="deleteItem(index)" class="far fa-trash-alt text-md hover:text-red-600"></i>
@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import db from '@/firebase/init'
-import firebase from 'firebase'
 import Editable from '@/components/common/Editable'
 export default {
     name: 'noteModal',
@@ -62,52 +60,31 @@ export default {
             body.classList.toggle('modal-active')
         },
         checkItem(index, item) {
-            this.editNote.list[index] = { text: item.text, completed: item.completed }
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
-                list: this.editNote.list,
-                dateModified: Date.now()
-            })
+            this.editNote.list[index] = { completed: item.completed, text: item.text }
+            this.$emit('update', this.editNote)
         },
         addRow() {
-            this.editNote.list.push({ text: '', completed: false })
+            this.editNote.list.push({ completed: false, text: '' })
         },
         deleteNote(note) {
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(function() {
-
-            }).catch(function(error) {
-                console.error(error)
-            })
             this.toggleModal()
-            this.$emit('reload-data')
-            this.$emit('delete')
+            this.$emit('delete', this.editNote)
         },
         deleteItem(index) {
             this.editNote.list.splice(index, 1)
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
-                list: this.editNote.list,
-                dateModified: Date.now()
-            })
+            this.$emit('update', this.editNote)
         },
         onUpdateNoteContent(newContent) {
-            this.editNote.content = newContent;
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
-                content: this.editNote.content,
-                dateModified: Date.now()
-            })
+            this.editNote.content = newContent
+            this.$emit('update', this.editNote)
         },
         onUpdateListItem(data) {
-            this.editNote.list[data.index] = { text: data.text }
-            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
-                list: this.editNote.list,
-                dateModified: Date.now()
-            })
+            this.editNote.list[data.index] = { completed: data.completed, text: data.text }
+            this.$emit('update', this.editNote)
         },
         onUpdateNoteTitle(newTitle){
-                this.editNote.title = newTitle;
-                db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(this.editNote.id).update({
-                    title: this.editNote.title,
-                    dateModified: Date.now()
-                })
+            this.editNote.title = newTitle
+            this.$emit('update', this.editNote)
         }
     },
     mounted() {

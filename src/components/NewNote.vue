@@ -109,7 +109,6 @@ export default {
             }
         },
         createList() {
-            console.log(this.list)
             let user = firebase.auth().currentUser.email
 
             if(!this.newTitle){

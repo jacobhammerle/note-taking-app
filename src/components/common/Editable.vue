@@ -6,12 +6,14 @@
         props: {
             value: null,
             index: null,
+            completed: false,
             id: null
         },
         data() {
             return {
                 data: {
                     text: null,
+                    completed: false,
                     index: null
                 }
             }
@@ -20,6 +22,7 @@
             onBlurInput(){
                 this.data.text = this.$refs.editable.innerText
                 this.data.index = this.index
+                this.data.completed = this.completed
                 this.$emit('change', this.data)
                 this.$emit('input', this.$refs.editable.innerText)
             },

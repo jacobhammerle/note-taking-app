@@ -38,7 +38,7 @@
             <!--Toast-->
             <Toast v-bind:color="toastColor" v-bind:message="toastMessage" />
             <!--Modal-->
-            <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" @delete="deleteNote" />
+            <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" @update="updateNote" @delete="deleteNote" />
         </div>
         <div v-else class="w-full text-center p-8 md:text-lg sm:text-md">
             no notes were found
@@ -86,6 +86,17 @@ export default {
                         color: doc.data().color,
                         timestamp: moment(doc.data().timestamp).format('lll')
                     })
+                }else if(change.type == 'modified'){
+                    let doc = change.doc
+                    let index = this.notes.findIndex(note => note.id === doc.id)
+                    this.notes[index].title = doc.data().title
+                    this.notes[index].list = doc.data().list
+                    this.notes[index].color = doc.data().color
+                    this.notes[index].timestamp = moment(doc.data().timestamp).format('lll')
+                }else if(change.type == 'removed'){
+                    let doc = change.doc
+                    let index = this.notes.findIndex(note => note.id === doc.id)
+                    this.notes.splice(index, 1)
                 }
             })
         })
@@ -108,7 +119,6 @@ export default {
                 this.notes = []
                 let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy('title').startAt(this.search).endAt(this.search + "\uf8ff")
                 ref.onSnapshot(snapshot => {
-                    console.log(this.search)
                     if(!this.search){
                         this.emptySearch = false
                         this.reloadData()
@@ -157,10 +167,32 @@ export default {
                 })
             })
         },
-        deleteNote() {
-            this.toastColor = 'teal'
-            this.toastMessage = 'Note Successfully Deleted!'
-            this.$children[1].toast()
+        deleteNote(note) {
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(doc => {
+                this.toastColor = 'teal'
+                this.toastMessage = 'Note Successfully Deleted!'
+                this.$children[1].toast()
+                this.reloadData()
+            }).catch(function(error) {
+                this.toastColor = 'red'
+                this.toastMessage = error
+                this.$children[1].toast()
+            })
+        },
+        updateNote(note) {
+            if(note.type == 1 || !note.type){
+                db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).update({
+                    title: note.title,
+                    content: note.content,
+                    dateModified: Date.now()
+                })
+            }else{
+                db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).update({
+                    title: note.title,
+                    list: note.list,
+                    dateModified: Date.now()
+                })
+            }
         }
     },
     mounted() {
