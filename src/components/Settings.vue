@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4">
+    <div class="px-4">
         <div class="text-2xl mb-4">
             Settings
         </div>
@@ -16,8 +16,6 @@
                             <label class="block py-3 lato-bold">Last Name</label>
                             <input class="w-full outline-none shadow rounded-lg p-2 mb-2" type="text" name="lastName" v-model="userSettings.lastName" />
                         </div>
-                    </div>
-                    <div class="w-full">
                     </div>
                 </div>
                 <div>

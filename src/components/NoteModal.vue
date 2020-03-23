@@ -20,7 +20,7 @@
                     <div v-for="(item, index) in editNote.list" class="text-gray-700 flex p-1 cursor-pointer rounded-md hover:bg-gray-200">
                         <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 cursor-pointer self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-1">
                         <div class="flex-auto">
-                            <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:value="item.text" v-bind:completed="item.completed" v-bind:index="index" @change="onUpdateListItem" />
+                            <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:id="`item-${index}`" v-bind:value="item.text" v-bind:completed="item.completed" v-bind:index="index" @change="onUpdateListItem" />
                         </div>
                         <div class="flex-end self-start mt-1 ml-3 mr-2">
                            <i @click="deleteItem(index)" class="far fa-trash-alt text-md hover:text-red-600"></i>
@@ -65,6 +65,11 @@ export default {
         },
         addRow() {
             this.editNote.list.push({ completed: false, text: '' })
+            let length = this.editNote.list.length
+            setTimeout(function(){ 
+                let el = document.getElementById('item-' + (length - 1))
+                el.focus()
+            }, 100);
         },
         deleteNote(note) {
             this.toggleModal()

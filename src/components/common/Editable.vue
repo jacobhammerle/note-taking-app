@@ -29,13 +29,18 @@
             setContentCarot(){
                 let el = document.getElementById("content")
                 el.focus()
+            },
+            setItemCarot(){
+                let el = document.getElementById("item-0")
+                el.focus()
             }
         },
         mounted() {
             this.$refs.editable.innerText = this.value
-
             if(this.id == 'content'){
                 this.setContentCarot()
+            }else if(this.id == 'item-0'){
+                this.setItemCarot()
             }
         },
         watch: {
@@ -45,6 +50,8 @@
 
                     if(this.id == 'content'){
                         this.setContentCarot()
+                    }else if(this.id == 'item-0'){
+                        this.setItemCarot()
                     }
                 }
             }

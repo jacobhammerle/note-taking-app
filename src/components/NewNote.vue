@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full p-4">
-        <div class="pb-8">
-            <a href="/home" class="cursor-pointer text-gray-500 hover:underline">return back home</a>
+    <div class="w-full px-4">
+        <div class="pb-4">
+            <a href="/home" class="cursor-pointer text-gray-500 hover:text-teal-500"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
         <div>
             <label class="block py-3 lato-bold" for="new-message">Title</label>

@@ -1,7 +1,13 @@
 <template>
     <div>
-        <div class="flex justify-between">
-            <div class="ml-4 mb-4 w-4/6 lg:w-4/6 md:w-4/6">
+        <div class="xl:hidden lg:hidden md:hidden sm:block md:invisible sm:visible mx-4 mb-4">
+            <Btn class="w-full" @click="createNewNote">Create</Btn>
+        </div>
+        <div class="xl:hidden lg:hidden md:hidden sm:block md:invisible sm:visible mx-4 mb-4">
+            <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="Search by note title..." type="text" name="search" v-model="search" />
+        </div>
+        <div class="hidden xl:flex lg:flex md:flex sm:hidden justify-between">
+            <div class="w-4/6 ml-4 mb-4">
                 <input v-on:keyup="searchTimeOut()" class="w-full bg-white outline-none shadow-md focus:shadow-lg transition duration-200 rounded-lg py-2 px-8 mb-2 h-12" placeholder="Search by note title..." type="text" name="search" v-model="search" />
             </div>
             <div class="mr-4 mb-4">
@@ -18,8 +24,14 @@
                         <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
                     </div>
                     <div v-else>
-                        <div v-for="(item, index) in note.list" class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            <input class="mr-2 leading-tight" type="checkbox" disabled="true" v-model="item.completed"> {{ item.text }}
+                        <div v-for="(item, index) in note.list.slice(0, 6)" class="text-gray-700 flex text-base leading-relaxed">
+                            <input class="flex-start flex-shrink-0 mr-2 leading-tight mt-1 cursor-pointer" type="checkbox" disabled="true" v-model="item.completed">
+                            <div class="flex-auto ml-1">
+                                {{displayItem(item.text)}}
+                            </div>
+                        </div>
+                        <div v-if="note.list.length > 6" class="text-gray-700 flex text-base leading-relaxed tracking-wider">
+                            ...
                         </div>
                     </div>
                 </div>
@@ -107,7 +119,7 @@ export default {
         },
         selectNote(note) {
             this.editNote = note
-            this.$children[2].toggleModal()
+            this.$children[3].toggleModal()
         },
         searchTimeOut() { 
             if (this.timer) {
@@ -147,6 +159,9 @@ export default {
         displayContent(content) {
             return content.trunc(200)
         },
+        displayItem(item) {
+            return item.trunc(55)
+        },
         reloadData() {
             this.notes = []
             let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
@@ -171,7 +186,7 @@ export default {
             db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(doc => {
                 this.toastColor = 'teal'
                 this.toastMessage = 'Note Successfully Deleted!'
-                this.$children[1].toast()
+                this.$children[2].toast()
                 this.reloadData()
             }).catch(function(error) {
                 this.toastColor = 'red'
