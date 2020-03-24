@@ -69,7 +69,7 @@ export default {
             setTimeout(function(){ 
                 let el = document.getElementById('item-' + (length - 1))
                 el.focus()
-            }, 100);
+            }, 100)
         },
         deleteNote(note) {
             this.toggleModal()

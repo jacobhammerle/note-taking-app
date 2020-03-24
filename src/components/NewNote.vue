@@ -30,7 +30,12 @@
         </ul>
         <div v-if="displayNote">
             <div>
-                <label class="block py-3 lato-bold" for="new-note">Content</label>
+                <div class="flex justify-between">
+                    <label class="block py-3 lato-bold" for="new-note">Content</label>
+                    <div>
+                        <input type="file" @change="onFileSelect" />
+                    </div>
+                </div>
                 <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8 leading-relaxed" type="text" name="content" v-model="newContent" />
             </div>
             <div>
@@ -73,7 +78,8 @@ export default {
             newColor: null,
             feedback: null,
             displayNote: true,
-            list: [ {text: '', completed: false }]
+            list: [ {text: '', completed: false }],
+            selectedFile: null
         }
     },
     methods: {
@@ -142,6 +148,9 @@ export default {
             let selectedColor = document.querySelector(`.bg-${color}-500`)
             selectedColor.classList.toggle('border-gray-800')
             this.newColor = color
+        },
+        onFileSelect(event) {
+            this.selectedFile = event.target.files[0]
         },
         addRow() {
             this.list.push({ text: '', completed: false })

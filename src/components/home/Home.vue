@@ -14,12 +14,28 @@
                 <Btn @click="createNewNote">Create</Btn>
             </div>
         </div>
+        <!-- Folders -->
+        <div class="w-full grid grid-cols-2 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 gap-4 mx-4">
+            <div @click="addFolder" class="bg-gray-200 hover:bg-gray-300 hover:text-gray-700 cursor-pointer rounded-md text-gray-700">
+                <div v-if="!isAddingFolder" class="px-6 py-4">
+                    <i class="fas fa-plus"></i><span class="ml-2">Add Folder</span>
+                </div>
+                <div v-else>
+                    <input id="add-folder" @keyup.enter="addFolderFromEnter" v-model="folderTitle" class="w-full outline-none bg-gray-200 px-6 py-4 rounded-md" type="text" />
+                </div>
+            </div>
+            <div v-for="folder in folders" :key="folder.id" @click="navigateInsideFolder(folder.id)" class="bg-gray-200 hover:bg-gray-300 hover:text-gray-700 px-6 py-4 cursor-pointer rounded-md text-gray-700">
+                <i class="fas fa-folder"></i><span class="ml-2">{{folder.title}}</span>
+            </div>
+        </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
-
             <!-- Card Section -->
             <div  @click="selectNote(note)" v-for="note in notes" :key="note.id" class="modal-open bg-white rounded-lg cursor-pointer shadow-lg inline-block relative hover:shadow-2xl transition duration-200">
                 <div class="px-6 pt-4 pb-16">
-                    <div class="font-bold text-xl mb-2">{{note.title}}</div>
+                    <div class="flex justify-between">
+                        <div class="font-bold text-xl mb-2">{{note.title}}</div>
+                        <div @click="noteOptions" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
+                    </div>
                     <div v-if="note.type == 1 || !note.type">
                         <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
                     </div>
@@ -76,16 +92,34 @@ export default {
     data() {
         return {
             notes: [],
+            folders: [],
             editNote: null,
             search: null,
             emptySearch: false,
             toastMessage: '',
-            toastColor: ''
+            toastColor: '',
+            folderTitle: '',
+            isAddingFolder: false
         }
     },
     created() {
-        let ref = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
-        ref.onSnapshot(snapshot => {
+        // get folders
+        let folderRef = db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').orderBy("dateCreated", "desc")
+        folderRef.onSnapshot(snapshot => {
+            snapshot.docChanges().forEach(change => {
+                if(change.type == 'added'){
+                    let doc = change.doc
+                    this.folders.push({
+                        id: doc.id,
+                        title: doc.data().title
+                    })
+                }
+            })
+        })
+
+        // get notes
+        let noteRef = db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').orderBy("timestamp", "desc")
+        noteRef.onSnapshot(snapshot => {
             snapshot.docChanges().forEach(change => {
                 if(change.type == 'added'){
                     let doc = change.doc
@@ -208,6 +242,30 @@ export default {
                     dateModified: Date.now()
                 })
             }
+        },
+        addFolder() {
+            this.isAddingFolder = true
+            setTimeout(function(){ 
+                let el = document.getElementById('add-folder')
+                el.focus()
+            }, 100)
+        },
+        addFolderFromEnter() {
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').add({
+                title: this.folderTitle,
+                dateCreated: Date.now()
+            }).catch(err => {
+                console.log(err)
+            })
+
+            this.folderTitle = ''
+            this.isAddingFolder = false
+        },
+        navigateInsideFolder(id) {
+            console.log(id)
+        },
+        noteOptions() {
+            console.log('note options')
         }
     },
     mounted() {
