@@ -34,14 +34,16 @@
                 <div class="px-6 pt-4 pb-16">
                     <div class="flex justify-between">
                         <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                        <div @click="noteOptions" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
+                        <div @click.prevent="selectNote" @click="noteOptions" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
                     </div>
                     <div v-if="note.type == 1 || !note.type">
                         <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
                     </div>
                     <div v-else>
                         <div v-for="(item, index) in note.list.slice(0, 6)" class="text-gray-700 flex text-base leading-relaxed">
-                            <input class="flex-start flex-shrink-0 mr-2 leading-tight mt-1 cursor-pointer" type="checkbox" disabled="true" v-model="item.completed">
+                            <div>
+                                <input class="flex-start flex-shrink-0 mr-2 leading-tight mt-1 cursor-pointer" type="checkbox" @change="checkItem(index, item, note)" @change.stop="selectNote" v-model="item.completed">
+                            </div>
                             <div class="flex-auto ml-1">
                                 {{displayItem(item.text)}}
                             </div>
@@ -66,7 +68,7 @@
             <!--Toast-->
             <Toast v-bind:color="toastColor" v-bind:message="toastMessage" />
             <!--Modal-->
-            <NoteModal v-bind:edit-note="editNote" @reload-data="reloadData" @update="updateNote" @delete="deleteNote" />
+            <NoteModal v-bind:note="editNote" @reload-data="reloadData" @update="updateNote" @delete="deleteNote" />
         </div>
         <div v-else class="w-full text-center p-8 md:text-lg sm:text-md">
             no notes were found
@@ -227,6 +229,10 @@ export default {
                 this.toastMessage = error
                 this.$children[1].toast()
             })
+        },
+        checkItem(index, item, note) {
+            note.list[index] = { completed: item.completed, text: item.text }
+            this.updateNote(note)
         },
         updateNote(note) {
             if(note.type == 1 || !note.type){

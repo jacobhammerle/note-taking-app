@@ -19,7 +19,7 @@
                 <div v-else class="pb-2">
                     <div v-for="(item, index) in editNote.list" class="text-gray-700 flex p-1 cursor-pointer rounded-md hover:bg-gray-200">
                         <input type="checkbox" @change="checkItem(index, item)" v-model="item.completed" class="flex-start flex-shrink-0 cursor-pointer self-start rounded-sm h-4 w-4 mt-2 ml-1 mr-1">
-                        <div class="flex-auto">
+                        <div v-if="item" class="flex-auto">
                             <Editable class="focus:bg-white rounded-md px-2 py-1" v-bind:id="`item-${index}`" v-bind:value="item.text" v-bind:completed="item.completed" v-bind:index="index" @change="onUpdateListItem" />
                         </div>
                         <div class="flex-end self-start mt-1 ml-3 mr-2">
@@ -42,13 +42,20 @@
 import Editable from '@/components/common/Editable'
 export default {
     name: 'noteModal',
-    props: ['editNote'],
+    props: ['note'],
     components: {
         Editable
     },
     data() {
         return {
-
+            editNote: null
+        }
+    },
+    watch: {
+        note: {
+            handler(val){
+                this.editNote = this.note
+            }
         }
     },
     methods: {
@@ -84,8 +91,10 @@ export default {
             this.$emit('update', this.editNote)
         },
         onUpdateListItem(data) {
-            this.editNote.list[data.index] = { completed: data.completed, text: data.text }
-            this.$emit('update', this.editNote)
+            if(this.editNote.list){
+                this.editNote.list[data.index] = { completed: data.completed, text: data.text }
+                this.$emit('update', this.editNote)
+            }
         },
         onUpdateNoteTitle(newTitle){
             this.editNote.title = newTitle
