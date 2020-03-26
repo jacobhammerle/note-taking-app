@@ -34,7 +34,11 @@
                 <div class="px-6 pt-4 pb-16">
                     <div class="flex justify-between">
                         <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                        <div @click.prevent="selectNote" @click="noteOptions" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
+                        <div @click.prevent="selectNote" @click="noteOptions(note.id)" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
+                        <div @click.prevent="selectNote" v-bind:id="note.id" class="hidden absolute right-0 mr-2 flex-1 mt-8 bg-gray-200 rounded-md py-1 w-20 shadow-xl text-right select-none">
+                            <div class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Move</div>
+                            <div @click="deleteNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Delete</div>
+                        </div>
                     </div>
                     <div v-if="note.type == 1 || !note.type">
                         <div class="text-gray-700 text-base leading-relaxed whitespace-pre-line">{{displayContent(note.content)}}</div>
@@ -101,7 +105,8 @@ export default {
             toastMessage: '',
             toastColor: '',
             folderTitle: '',
-            isAddingFolder: false
+            isAddingFolder: false,
+            isOptionsVisible: false
         }
     },
     created() {
@@ -270,8 +275,14 @@ export default {
         navigateInsideFolder(id) {
             console.log(id)
         },
-        noteOptions() {
-            console.log('note options')
+        noteOptions(id) {
+            let el = document.getElementById(id);
+            el.classList.toggle("hidden");
+            console.log('note options for note id: ' + id)
+        },
+        closeNoteOptions(id) {
+            let el = document.getElementById(id);
+            el.classList.toggle("hidden");
         }
     },
     mounted() {

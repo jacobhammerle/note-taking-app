@@ -33,7 +33,7 @@
                 <div class="flex justify-between">
                     <label class="block py-3 lato-bold" for="new-note">Content</label>
                     <div>
-                        <input type="file" @change="onFileSelect" />
+                        <!--" @change="onFileSelect" />-->
                     </div>
                 </div>
                 <textarea class="w-full outline-none shadow rounded-lg p-4 h-64 mb-8 leading-relaxed" type="text" name="content" v-model="newContent" />
