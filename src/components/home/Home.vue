@@ -24,8 +24,13 @@
                     <input id="add-folder" @keyup.enter="addFolderFromEnter" v-model="folderTitle" class="w-full outline-none bg-gray-200 px-6 py-4 rounded-md" type="text" />
                 </div>
             </div>
-            <div v-for="folder in folders" :key="folder.id" @click="navigateInsideFolder(folder.id)" class="bg-gray-200 hover:bg-gray-300 hover:text-gray-700 px-6 py-4 cursor-pointer rounded-md text-gray-700">
-                <i class="fas fa-folder"></i><span class="ml-2">{{folder.title}}</span>
+            <div v-for="folder in folders" :key="folder.id" @click="navigateInsideFolder(folder.id)" @mouseover="showDelete(folder.id, true)" @mouseleave="showDelete(folder.id, false)" class="flex justify-between bg-gray-200 hover:bg-gray-300 hover:text-gray-700 px-6 py-4 cursor-pointer rounded-md text-gray-700">
+                <div>
+                    <i class="fas fa-folder"></i><span class="ml-2">{{folder.title}}</span>
+                </div>
+                <div @click="deleteFolder(folder.id)" v-bind:id="'folder-' + folder.id" class="hidden">
+                    <i class="far fa-trash-alt hover:text-red-500"></i>
+                </div>
             </div>
         </div>
         <div v-if="!emptySearch" class="w-full grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 mb-8">
@@ -34,9 +39,17 @@
                 <div class="px-6 pt-4 pb-16">
                     <div class="flex justify-between">
                         <div class="font-bold text-xl mb-2">{{note.title}}</div>
-                        <div @click.prevent="selectNote" @click="noteOptions(note.id)" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
-                        <div @click.prevent="selectNote" v-bind:id="note.id" class="hidden absolute right-0 mr-2 flex-1 mt-8 bg-gray-200 rounded-md py-1 w-20 shadow-xl text-right select-none">
-                            <div class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Move</div>
+                        <div @click.prevent="selectNote" @click="noteOptions(note)" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
+                        <div v-bind:id="note.id" class="hidden absolute right-0 mr-2 mt-8 bg-gray-200 rounded-md py-1 w-20 shadow-xl text-right">
+                            <div @click="moveNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Move</div>
+                            <!--
+                            <select id="cars" class="text-sm">
+                                <option value="volvo">Volvo</option>
+                                <option value="saab">Saab</option>
+                                <option value="opel">Opel</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                            -->
                             <div @click="deleteNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Delete</div>
                         </div>
                     </div>
@@ -46,7 +59,7 @@
                     <div v-else>
                         <div v-for="(item, index) in note.list.slice(0, 6)" class="text-gray-700 flex text-base leading-relaxed">
                             <div>
-                                <input class="flex-start flex-shrink-0 mr-2 leading-tight mt-1 cursor-pointer" type="checkbox" @change="checkItem(index, item, note)" @change.stop="selectNote" v-model="item.completed">
+                                <input class="flex-start flex-shrink-0 mr-2 leading-tight mt-1 cursor-pointer" type="checkbox" @change="checkItem(index, item, note)" @change.prevent="selectNote" v-model="item.completed">
                             </div>
                             <div class="flex-auto ml-1">
                                 {{displayItem(item.text)}}
@@ -120,6 +133,10 @@ export default {
                         id: doc.id,
                         title: doc.data().title
                     })
+                }else if(change.type == 'removed'){
+                    let doc = change.doc
+                    let index = this.folders.findIndex(folder => folder.id === doc.id)
+                    this.folders.splice(index, 1)
                 }
             })
         })
@@ -264,6 +281,7 @@ export default {
         addFolderFromEnter() {
             db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').add({
                 title: this.folderTitle,
+                notes: [],
                 dateCreated: Date.now()
             }).catch(err => {
                 console.log(err)
@@ -272,17 +290,53 @@ export default {
             this.folderTitle = ''
             this.isAddingFolder = false
         },
+        showDelete(id, show) {
+            if(show){
+                let el = document.getElementById('folder-' + id)
+                el.classList.remove("hidden")
+            }else{
+                let el = document.getElementById('folder-' + id)
+                el.classList.add("hidden")
+            }
+        },
+        deleteFolder(id) {
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').doc(id).delete().then(doc => {
+                this.toastColor = 'teal'
+                this.toastMessage = 'Folder Successfully Deleted!'
+                this.$children[2].toast()
+                this.reloadData()
+            }).catch(function(error) {
+                this.toastColor = 'red'
+                this.toastMessage = error
+                this.$children[1].toast()
+            })
+        },
         navigateInsideFolder(id) {
             console.log(id)
         },
-        noteOptions(id) {
-            let el = document.getElementById(id);
-            el.classList.toggle("hidden");
-            console.log('note options for note id: ' + id)
+        noteOptions(note) {
+            let el = document.getElementById(note.id)
+            el.classList.toggle("hidden")
+            console.log('note options for note id: ' + note.id)
         },
         closeNoteOptions(id) {
             let el = document.getElementById(id);
             el.classList.toggle("hidden");
+        },
+        moveNote(note) {
+            /*
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(doc => {
+
+            }).catch(function(error) {
+
+            })
+            */
+
+            db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').doc('jBRBpI0hl2cCAU7Zx1N1').update({
+                notes: note
+            }).catch(err => {
+                console.log(err)
+            })
         }
     },
     mounted() {
