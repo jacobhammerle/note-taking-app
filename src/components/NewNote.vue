@@ -62,7 +62,6 @@
 <script>
 import db from '@/firebase/init'
 import firebase from 'firebase'
-import Toast from '@/components/common/Toast'
 import Btn from '@/components/common/Btn'
 import Editable from '@/components/common/Editable'
 export default {
@@ -108,7 +107,6 @@ export default {
                 this.newTitle = null
                 this.newContent = null
                 this.feedback = null
-                this.toastMessage = null
                 this.$router.push({ name: "Home" })
             }else{
                 this.feedback = "there was an error creating the note"
@@ -134,7 +132,6 @@ export default {
                 })
                 this.newTitle = null
                 this.feedback = null
-                this.toastMessage = null
                 this.$router.push({ name: "Home" })
             }else{
                 this.feedback = "there was an error creating the list"

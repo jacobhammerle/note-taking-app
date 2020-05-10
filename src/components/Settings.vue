@@ -25,7 +25,7 @@
             </form>
         </div>
         <!--Toast-->
-        <Toast v-bind:color="toastColor" v-bind:message="toastMessage" />
+        <Toast ref="toast" />
     </div>
 </template>
 
@@ -46,8 +46,6 @@ export default {
                 firstName: '',
                 lastName: ''
             },
-            toastMessage: '',
-            toastColor: null,
             feedback: null
         }
     },
@@ -67,9 +65,7 @@ export default {
                     lastName: this.userSettings.lastName,
                     dateModified: Date.now()
                 })
-            this.toastColor = 'teal'
-            this.toastMessage = 'User Settings Updated Successfully!'
-            this.$children[1].toast()
+            this.$ref.toast.toast('User Settings Updated Successfully!', 'teal')
         }
     }
 }

@@ -83,9 +83,9 @@
             </div>
 
             <!--Toast-->
-            <Toast v-bind:color="toastColor" v-bind:message="toastMessage" />
+            <Toast ref="toast" />
             <!--Modal-->
-            <NoteModal v-bind:note="editNote" @reload-data="reloadData" @update="updateNote" @delete="deleteNote" />
+            <NoteModal ref="modal" v-bind:note="editNote" @reload-data="reloadData" @update="updateNote" @delete="deleteNote" />
         </div>
         <div v-else class="w-full text-center p-8 md:text-lg sm:text-md">
             no notes were found
@@ -115,8 +115,6 @@ export default {
             editNote: null,
             search: null,
             emptySearch: false,
-            toastMessage: '',
-            toastColor: '',
             folderTitle: '',
             isAddingFolder: false,
             isOptionsVisible: false
@@ -177,7 +175,7 @@ export default {
         },
         selectNote(note) {
             this.editNote = note
-            this.$children[3].toggleModal()
+            this.$refs.modal.toggleModal()
         },
         searchTimeOut() { 
             if (this.timer) {
@@ -242,14 +240,10 @@ export default {
         },
         deleteNote(note) {
             db.collection('users').doc(firebase.auth().currentUser.email).collection('notes').doc(note.id).delete().then(doc => {
-                this.toastColor = 'teal'
-                this.toastMessage = 'Note Successfully Deleted!'
-                this.$children[2].toast()
+                this.$refs.toast.toast('Note Successfully Deleted!', 'teal')
                 this.reloadData()
             }).catch(function(error) {
-                this.toastColor = 'red'
-                this.toastMessage = error
-                this.$children[1].toast()
+                this.$refs.toast.toast(error, 'red')
             })
         },
         checkItem(index, item, note) {
@@ -301,14 +295,10 @@ export default {
         },
         deleteFolder(id) {
             db.collection('users').doc(firebase.auth().currentUser.email).collection('folders').doc(id).delete().then(doc => {
-                this.toastColor = 'teal'
-                this.toastMessage = 'Folder Successfully Deleted!'
-                this.$children[2].toast()
+                this.$refs.toast.toast('Folder Successfully Deleted!', 'teal')
                 this.reloadData()
             }).catch(function(error) {
-                this.toastColor = 'red'
-                this.toastMessage = error
-                this.$children[1].toast()
+                this.$refs.toast.toast(error, 'read')
             })
         },
         navigateInsideFolder(id) {

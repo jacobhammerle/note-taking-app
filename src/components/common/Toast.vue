@@ -15,14 +15,16 @@
 <script>
 export default {
     name: 'toast',
-    props: ['message', 'color'],
     data() {
         return {
-
+            message: '',
+            color: null
         }
     },
     methods: {
-        toast() {
+        toast(message, color) {
+            this.message = message
+            this.color = color
             const toast = document.querySelector('.alert-toast')
             toast.classList.toggle('hidden')
 
