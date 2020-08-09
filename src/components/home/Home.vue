@@ -15,21 +15,30 @@
             </div>
         </div>
         <!-- Folders -->
-        <div class="w-full grid grid-cols-2 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 gap-4 mx-4">
-            <div @click="addFolder" class="bg-gray-200 hover:bg-gray-300 hover:text-gray-700 cursor-pointer rounded-md text-gray-700">
-                <div v-if="!isAddingFolder" class="px-6 py-4">
-                    <i class="fas fa-plus"></i><span class="ml-2">Add Folder</span>
+        <div class="w-full">
+            <div class="grid grid-cols-2 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-4 mx-4">
+                <div @click="addFolder" class="bg-gray-200 hover:bg-gray-300 hover:text-gray-700 cursor-pointer rounded-md text-gray-700">
+                    <div v-if="!isAddingFolder" class="px-6 py-4">
+                        <i class="fas fa-plus"></i><span class="ml-2">Add Folder</span>
+                    </div>
+                    <div v-else>
+                        <input id="add-folder" @keyup.enter="addFolderFromEnter" v-model="folderTitle" class="w-full outline-none bg-gray-200 px-6 py-4 rounded-md" type="text" />
+                    </div>
                 </div>
-                <div v-else>
-                    <input id="add-folder" @keyup.enter="addFolderFromEnter" v-model="folderTitle" class="w-full outline-none bg-gray-200 px-6 py-4 rounded-md" type="text" />
-                </div>
-            </div>
-            <div v-for="folder in folders" :key="folder.id" @click="navigateInsideFolder(folder.id)" @mouseover="showDelete(folder.id, true)" @mouseleave="showDelete(folder.id, false)" class="flex justify-between bg-gray-200 hover:bg-gray-300 hover:text-gray-700 px-6 py-4 cursor-pointer rounded-md text-gray-700">
-                <div>
-                    <i class="fas fa-folder"></i><span class="ml-2">{{folder.title}}</span>
-                </div>
-                <div @click="deleteFolder(folder.id)" v-bind:id="'folder-' + folder.id" class="hidden">
-                    <i class="far fa-trash-alt hover:text-red-500"></i>
+                <div v-for="folder in folders" :key="folder.id" @click="navigateInsideFolder(folder.id)" @mouseover="showDelete(folder.id, true)" @mouseleave="showDelete(folder.id, false)" class="flex justify-between relative bg-gray-200 hover:bg-gray-300 hover:text-gray-700 px-6 py-4 cursor-pointer rounded-md text-gray-700">
+                    <div class="flex justify-between">
+                        <div>
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <div class="ml-2">
+                            {{folder.title}}
+                        </div>
+                    </div>
+                    <div @click="deleteFolder(folder.id)" v-bind:id="'folder-' + folder.id" class="hidden absolute right-0 bg-red-500 px-4 rounded-r-md text-white h-full hover:bg-red-700 top-0">
+                        <div class="flex h-full">
+                            <i class="self-center far fa-trash-alt"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,16 +50,8 @@
                         <div class="font-bold text-xl mb-2">{{note.title}}</div>
                         <div @click.prevent="selectNote" @click="noteOptions(note)" class="text-gray-800 hover:text-gray-600 pl-2 pr-1 py-1"><i class="fas fa-ellipsis-v text-sm"></i></div>
                         <div v-bind:id="note.id" class="hidden absolute right-0 mr-2 mt-8 bg-gray-200 rounded-md py-1 w-20 shadow-xl text-right">
-                            <div @click="moveNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Move</div>
-                            <!--
-                            <select id="cars" class="text-sm">
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="opel">Opel</option>
-                                <option value="audi">Audi</option>
-                            </select>
-                            -->
-                            <div @click="deleteNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Delete</div>
+                            <div @click.prevent="selectNote" @click="moveNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Move</div>
+                            <div @click.prevent="selectNote" @click="deleteNote(note)" class="white-text text-gray-700 block px-4 py-1 hover:bg-gray-500">Delete</div>
                         </div>
                     </div>
                     <div v-if="note.type == 1 || !note.type">
